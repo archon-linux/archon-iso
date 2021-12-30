@@ -27,7 +27,7 @@ echo
 	# setting of the general parameters
 	archisoRequiredVersion="archiso 60-1"
 	buildFolder=$HOME"/archon-build"
-	outFolder=$HOME"/Archon-Iso-Zen-Out"
+	outFolder=$HOME"/archon-iso-out"
 	archisoVersion=$(sudo pacman -Q archiso)
 
 	echo "################################################################## "
@@ -168,7 +168,7 @@ echo
  	echo "Moving pkglist.x86_64.txt"
  	echo "########################"
 	rename=$(date +%Y-%m-%d)
- 	cp "${buildFolder}/iso/arch/pkglist.x86_64.txt"  "${outFolder}/archlinux-${rename}-pkglist.txt"
+ 	cp "${buildFolder}/iso/arch/pkglist.x86_64.txt"  "${outFolder}/archon-linux-${rename}-pkglist.txt"
 
 echo
 echo "##################################################################"
