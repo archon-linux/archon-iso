@@ -134,3 +134,7 @@ chaotic-mirrorlist
 
 # ---------- Virtual Box --------------------------------- #
 virtualbox-guest-utils
+
+# ---------- Display manager ----------------------------- #
+lightdm
+lightdm-slick-greeter
