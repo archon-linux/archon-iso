@@ -109,7 +109,6 @@ usb_modeswitch
 usbmuxd
 usbutils
 vim
-virtualbox-guest-utils-nox
 vpnc
 wireless-regdb
 wireless_tools
@@ -132,3 +131,6 @@ network-manager-applet
 # ---------- Repositories -------------------------------- #
 chaotic-keyring
 chaotic-mirrorlist
+
+# ---------- Virtual Box --------------------------------- #
+virtualbox-guest-utils
