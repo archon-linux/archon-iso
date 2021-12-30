@@ -123,3 +123,8 @@ zsh
 base-devel
 linux-zen
 linux-zen-headers
+
+# ---------- Networking ---------------------------------- #
+inetutils
+networkmanager
+network-manager-applet

@@ -1,4 +1,8 @@
+WIP
 # Archon Linux ISO
+## Building the ISO
+
+Use the build.sh, do `./build.sh --clear` to clear pacman cache and download all packages.
 
 ## Maintaining the ISO
 
@@ -6,9 +10,10 @@
 
 First commit will have the archiso folder be a copy of the archiso 60-1 releng folder. Compare this commit with the latest releng folder when updating archiso version.
 
-Change the archiso version in `archiso.md` and the 2 install scripts.
+`git checkout 'git rev-list --max-parents=0 HEAD | tail -n 1'`
+`diff -rq ./archiso /usr/share/archiso/configs/releng`
 
-WIP
+Change the archiso version in `archiso.md` and the 2 install scripts.
 
 # Legacy ALCI readme this project is based from:
 
