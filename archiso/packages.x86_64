@@ -128,3 +128,7 @@ linux-zen-headers
 inetutils
 networkmanager
 network-manager-applet
+
+# ---------- Repositories -------------------------------- #
+chaotic-keyring
+chaotic-mirrorlist

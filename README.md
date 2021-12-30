@@ -1,8 +1,13 @@
-WIP
+WIP, local repo mode is set in `archiso/pacman.conf`
 # Archon Linux ISO
 ## Building the ISO
 
 Use the build.sh, do `./build.sh --clear` to clear pacman cache and download all packages.
+
+## Development environment for the ISO
+
+Clone all `archon-linux` repositories in the same folder, including this one.
+Check `archiso/pacman.conf` to set it up for a local repo.
 
 ## Maintaining the ISO
 
