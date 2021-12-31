@@ -1,13 +1,84 @@
 WIP, local repo mode is set in `archiso/pacman.conf`
 # Archon Linux ISO
+
+## Why?
+
+I figured might as well buid an ISO rather than have install scripts into dotfiles, and maybe learn a thing or two along the way.
+This readme will be a sort of logbook of my progress, choices and fails as I build my dream OS!
 ## Building the ISO
 
-Use the build.sh, do `./build.sh --clear` to clear pacman cache and download all packages.
+Use the `build.sh` script, use `./build.sh --clear` to clear pacman cache and download latest packages after any sort of update on your build system.
+
+### Snapshot branches
+
+Checkout any of these branches to build a specific version of Archon Linux.
+* `main`: The latest and greatest
+
+* `minimal`: Branch from a commit that builds the minimal package list, a very barebones system with our repo, chaotic repo, `lightdm` and `openbox` setup on a `btrfs` partition with `snapper`, as described below.
+
+## Packages
+
+Many choices, a single opinion.
+
+You can refer to the commit history to see how these changes were implemented from a vanilla archiso releng folder.
+
+### Minimal package list to have a *workable* system after install
+
+* The systemd network services were replaced by those from `networkmanager` and the related network utilities such as `network-manager-applet` and `inetutils` were added.
+
+* From the vanilla releng package list `linux` and `virtualbox-guest-utils-nox` are replaced in favor of `linux-zen` and `virtualbox-guest-utils`, you can check the required changes to the files in the commit history.
+
+* `liveuser` is created for the calamares graphical install session.
+
+* `lightdm` and `lightdm-slick-greeter` configuration files are included in the archiso files as it's a pain to deal with the conflict from having them imported from packages at build time like we will for the skeleton files and other configs. The lightdm wallpaper will be imported from the `archon-theme` package.
+
+* Add the Archon Linux repository to `archiso/pacman.conf` which will make `chaotic-keyring` and `chaotic-mirrorlist` available along with all our other custom packages. Note there is a local option for the `archon-repo` for development.
+
+* At that point very little changes should be happening in the archiso folder. Emphasis on should, I'll keep my commit history legit!
+
+    We can now boot and have a live session along with all the packages we could need from our repository and chaotic. But not much will happen yet.
+
+* So let's start by adding `calamares` and `calamares-config`. The latter is used to configure everything about our calamares install, most notably that we will be using the zen kernel and 'forcing' btrfs (one opinion, right?). Hopefully this whole essay will help you change such things to your opinion on the matter.
+
+* Another key part of the Archon Linux calamares config package are the `post_install.sh` and `chrooted_post_install.sh` scripts. They are in charge of cleaning up and doing some prep work such as setting up the snapshot btrfs subvolume. Both files are well commented and offer a debug log to a file (`/var/log/{post_install.log,chrooted_post_install.log}`) that is available after the first reboot.
+
+* This nicely leads us to our next section, note `os-prober` helping with dual booting:
+    ```
+    grub-btrfs
+    os-prober
+    snapper
+    snapper-gui-git
+    ```
+
+* The post install scripts will also remove all unused graphics drivers, so might as well install all of them:
+    ```
+    nvidia
+    nvidia-settings
+    nvidia-utils
+    xf86-video-amdgpu
+    xf86-video-ati
+    xf86-video-fbdev
+    xf86-video-intel
+    xf86-video-nouveau
+    xf86-video-vesa
+    ```
+
+* Next we need the `xorg-server` along with `xorg-xinput` and `xf86-input-libinput` for support for mouse and touchpads in case the install is on a laptop (NOT optimized for laptops, yet).
+
+* We will want to log the session into `openbox` as it is the main window manager for Archon Linux and let's add `xterm` as it is a default terminal for many window managers. Of course we also add `neofetch` for the rice.
+
+* FInally we need a way to autostart the calamares installer which creates a desktop file in `/etc/xdg/autostart`. Looking at the wiki (https://wiki.archlinux.org/title/XDG_Autostart) we have a few choices. `dex` is a pretty standard one and most desktop environments have their own support for it. `openbox` can do it if the `python-pyxdg` package is installed.
+
+    What is not mentioned is that `lxsession-gtk3`, that we plan to use as our session manager, also handles autostarting xdg applications. Problem solved right? Not just yet. We need to now autostart `lxsession`...
+
+    Again, many choices. We know we want it to start running when Xorg starts or when the window manager starts. Let's plan for the future and put as little as possible in the window manager startup in case we want to change it or add another one. This leaves us with `.xinitrc` and `.xprofile`. Since `lightdm` uses `.xprofile` and not `.xinitrc` by default our choices are gone. This also sets us on a clear path to put all startup applications in `.xprofile` and be ready to run more window managers and desktop environments together in the future.
+
+    Now we can choose how to include that `.xprofile` file in our iso. Simplest method is to simply add it to the archiso folder, but remember, we want out configs to come from custom built packages. For this branch commmit state we will put it in `archiso/etc/skel`.
 
 ## Development environment for the ISO
 
 Clone all `archon-linux` repositories in the same folder, including this one.
-Check `archiso/pacman.conf` to set it up for a local repo.
+Edit `archiso/pacman.conf` to set it up for a local repo.
 
 ## Maintaining the ISO
 
@@ -20,7 +91,11 @@ First commit will have the archiso folder be a copy of the archiso 60-1 releng f
 
 Change the archiso version in `archiso.md` and the 2 install scripts.
 
-# Legacy ALCI readme this project is based from:
+## Sources / Inspiration
+
+The main starting point for this project was https://github.com/arch-linux-calamares-installer along with many scripts and concepts from https://github.com/archcraft-os/
+
+## Legacy ALCI readme this project is based from:
 
 # ALCI DEVELOPMENT/DESKTOP
 

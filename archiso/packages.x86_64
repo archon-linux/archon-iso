@@ -138,3 +138,41 @@ virtualbox-guest-utils
 # ---------- Display manager ----------------------------- #
 lightdm
 lightdm-slick-greeter
+
+# ---------- Calamares ----------------------------------- #
+calamares
+calamares-config
+
+# ---------- Grub & btrfs -------------------------------- #
+grub-btrfs
+os-prober
+snapper
+snapper-gui-git
+
+# ---------- GPU Drivers --------------------------------- #
+nvidia
+nvidia-settings
+nvidia-utils
+xf86-video-amdgpu
+xf86-video-ati
+xf86-video-fbdev
+xf86-video-intel
+xf86-video-nouveau
+xf86-video-vesa
+
+# ---------- Xorg packages ------------------------------- #
+xorg-server
+
+# ---------- Touchpad & mouse ---------------------------- #
+xorg-xinput
+xf86-input-libinput
+
+# ---------- Terminals & related ------------------------- #
+neofetch
+xterm
+
+# ---------- Open box ------------------------------------ #
+openbox
+
+# ---------- LXDE utilities ------------------------------ #
+lxsession-gtk3
