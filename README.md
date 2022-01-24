@@ -1,5 +1,6 @@
 WIP:
-- note that as of this commit I have not built from the repositories, all has been local. This is v0 public start point.
+- Archon Linux has been tested from github repositories and in a virtual machine as of this commit.
+- Will update when I install on my hardware.
 
 # Archon Linux ISO<a name="top"></a>
 1. [Why?](#why)

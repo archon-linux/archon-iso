@@ -29,6 +29,7 @@ git init --bare "${current_dir}/dotfiles/.dotfiles"
 archondots="/usr/bin/git --git-dir=${current_dir}/dotfiles/.dotfiles --work-tree=${current_dir}/dotfiles"
 echo
 echo "Think about creating this alias:"
+echo
 echo "alias archondots=\"${archondots}\""
 echo
 
