@@ -2,21 +2,21 @@
 alsa-utils
 amd-ucode
 arch-install-scripts
-archinstall
-b43-fwcutter
+# archinstall
+# b43-fwcutter
 base
 bind-tools
 brltty
 broadcom-wl
 btrfs-progs
 clonezilla
-cloud-init
+# cloud-init
 crda
 cryptsetup
-darkhttpd
+# darkhttpd
 ddrescue
 dhclient
-dhcpcd
+# dhcpcd
 diffutils
 dmraid
 dnsmasq
@@ -24,7 +24,7 @@ dosfstools
 e2fsprogs
 edk2-shell
 efibootmgr
-espeakup
+# espeakup
 ethtool
 exfatprogs
 f2fs-tools
@@ -34,27 +34,28 @@ gnu-netcat
 gpart
 gpm
 gptfdisk
-grml-zsh-config
+# grml-zsh-config
 grub
 hdparm
 intel-ucode
 ipw2100-fw
 ipw2200-fw
 irssi
-iw
-iwd
+# iw
+# iwd
 jfsutils
-kitty-terminfo
+# kitty-terminfo
 less
-lftp
+# lftp
 libfido2
 libusb-compat
+# linux
 linux-atm
 linux-firmware
-livecd-sounds
+# livecd-sounds
 lsscsi
 lvm2
-lynx
+# lynx
 man-db
 man-pages
 mc
@@ -109,6 +110,7 @@ usb_modeswitch
 usbmuxd
 usbutils
 vim
+# virtualbox-guest-utils-nox
 vpnc
 wireless-regdb
 wireless_tools
@@ -123,16 +125,27 @@ base-devel
 linux-zen
 linux-zen-headers
 
-# ---------- Networking ---------------------------------- #
+# ---------- Archon specific packages -------------------- #
+archon-grub-theme
+archon-gtk3-themes
+archon-system
+archon-wallpapers
+
+# ---------- Networking & internet ----------------------- #
+brave
+dnsutils
 inetutils
 networkmanager
 network-manager-applet
+ntp
+wget
 
 # ---------- Repositories -------------------------------- #
 chaotic-keyring
 chaotic-mirrorlist
 
-# ---------- Virtual Box --------------------------------- #
+# ---------- Virtual machines ---------------------------- #
+spice-vdagent
 virtualbox-guest-utils
 
 # ---------- Display manager ----------------------------- #
@@ -141,7 +154,7 @@ lightdm-slick-greeter
 
 # ---------- Calamares ----------------------------------- #
 calamares
-calamares-config
+# calamares-config
 
 # ---------- Grub & btrfs -------------------------------- #
 grub-btrfs
@@ -149,7 +162,7 @@ os-prober
 snapper
 snapper-gui-git
 
-# ---------- GPU Drivers --------------------------------- #
+# ---------- GPU drivers --------------------------------- #
 nvidia
 nvidia-settings
 nvidia-utils
@@ -162,17 +175,172 @@ xf86-video-vesa
 
 # ---------- Xorg packages ------------------------------- #
 xorg-server
-
-# ---------- Touchpad & mouse ---------------------------- #
+xorg-xrdb
+xorg-xev
+xorg-xwininfo
 xorg-xinput
 xf86-input-libinput
 
+# ---------- X compositer -------------------------------- #
+picom-ibhagwan-git
+
 # ---------- Terminals & related ------------------------- #
+alacritty
+bash-completion
+dash
+dashbinsh
+fish
+lolcat
 neofetch
+shell-color-scripts
+sl
+starship
+tty-clock-git
 xterm
 
-# ---------- Open box ------------------------------------ #
-openbox
+# ---------- General utilities ----------------------- #
+ansible
+arandr
+browserpass
+browserpass-chromium
+dateutils
+dconf-editor
+dialog
+expac
+expect
+fzf
+git
+gnupg
+gparted
+imagemagick
+jq
+pass
+ripasso-cursive
+logrotate
+make
+meld
+moreutils
+p7zip
+qrencode
+rsync
+scrot
+shellcheck
+sxiv
+unrar
+unzip
+virtualfish
+xarchiver
+xclip
+xsettingsd
+zbar
+zip
+zramd
+
+# ---------- Rust utilities ------------------------------ #
+bandwhich
+bat
+dust
+exa
+fd
+procs
+ripgrep
+sd
+tealdeer
+zoxide
 
 # ---------- LXDE utilities ------------------------------ #
+lxappearance-gtk3
+lxinput-gtk3
+lxrandr-gtk3
 lxsession-gtk3
+
+# ---------- XDG utilities ------------------------------- #
+xdg-utils
+xdg-user-dirs
+xdg-user-dirs-gtk
+
+# ---------- Libs & extras ------------------------------- #
+aic94xx-firmware
+gnome-themes-extra
+gtk-engine-murrine
+perl-file-desktopentry
+python-pexpect
+python-pillow
+python-numpy
+qt5-x11extras
+r8168-dkms
+upd72020x-fw
+wd719x-firmware
+
+# ---------- Open box ------------------------------------ #
+obconf
+obkey
+obmenu-generator
+obmenu2-git
+openbox
+
+# ---------- File manager -------------------------------- #
+nemo
+
+# ---------- Text editors -------------------------------- #
+neovim
+vscodium
+vi
+
+# ---------- System monitors ----------------------------- #
+bottom-git
+glances
+htop
+lsof
+progress
+strace
+sysstat
+
+# ---------- Package manager ----------------------------- #
+pacman-contrib
+pamac-aur
+paru
+
+# ---------- Bluetooth ----------------------------------- #
+blueman
+bluez
+bluez-utils
+pulseaudio-bluetooth
+
+# ---------- Audio --------------------------------------- #
+alsa-tools
+alsa-utils
+pavucontrol
+pulseaudio-alsa
+pulseaudio-equalizer-ladspa
+
+# pipewire packages if you want to test those, will break rofi
+# alsa-tools
+# alsa-utils
+# pavucontrol
+# pipewire-alsa
+# pipewire-jack
+# pipewire-pulse
+
+# ---------- Core wm utilities --------------------------- #
+betterlockscreen
+dunst
+feh
+polybar
+rofi
+rofi-calc
+rofi-pass-git
+slop
+sxhkd
+wmctrl
+
+# ---------- Themes -------------------------------------- #
+flavours
+papirus-icon-theme-git
+
+# ---------- Fonts --------------------------------------- #
+adobe-source-code-pro-fonts
+font-manager
+nerd-fonts-fira-code
+ttf-dejavu
+ttf-liberation

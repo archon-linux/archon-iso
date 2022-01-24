@@ -1,180 +1,209 @@
-#!/bin/bash
-#set -e
-##################################################################################################################
-# Author	:	Erik Dubois
-# Website	:	https://www.erikdubois.online
-# Website	:	https://www.arcolinux.info
-# Website	:	https://www.arcolinux.com
-# Website	:	https://www.arcolinuxd.com
-# Website	:	https://www.arcolinuxb.com
-# Website	:	https://www.arcolinuxiso.com
-# Website	:	https://www.arcolinuxforum.com
-# Website	:	https://www.alci.online
-##################################################################################################################
-#
-#   DO NOT JUST RUN THIS. EXAMINE AND JUDGE. RUN AT YOUR OWN RISK.
-#
-##################################################################################################################
-echo
-echo "################################################################## "
-tput setaf 2
-echo "Phase 1 : "
-echo "- Setting General parameters"
-tput sgr0
-echo "################################################################## "
-echo
+#!/usr/bin/env bash
+# archon-iso
+# https://github.com/archon-linux/archon-iso
+# @nekwebdev
+# LICENSE: GPLv3
+# Inspiration: Erik Dubois
+# https://www.alci.online
+set -e
 
-	# setting of the general parameters
-	archisoRequiredVersion="archiso 60-1"
-	buildFolder=$HOME"/archon-build"
-	outFolder=$HOME"/archon-iso-out"
-	archisoVersion=$(sudo pacman -Q archiso)
+###### => variables ############################################################
+archisoRequiredVersion="archiso 60-1"
+buildFolder="/tmp/archiso-tmp"
+outFolder="${HOME}/archon-iso-out"
+archisoVersion=$(sudo pacman -Q archiso)
 
-	echo "################################################################## "
-	echo "Do you have the right archiso version? : $archisoVersion"
-	echo "What is the required archiso version?  : $archisoRequiredVersion"
-	echo "Build folder                           : $buildFolder"
-	echo "Out folder                             : $outFolder"
-	echo "################################################################## "
+###### => functions ############################################################
+# echo_step() outputs a step collored in cyan, without outputing a newline.
+function echo_step() {
+	tput setaf 6 # 6 = cyan
+	echo -n "$1"
+	tput sgr 0 0  # reset terminal
+}
+
+# echo_equals() outputs a line with =
+function echo_equals() {
+	COUNTER=0
+	while [  $COUNTER -lt "$1" ]; do
+		printf '='
+		(( COUNTER=COUNTER+1 ))
+	done
+}
+
+# echo_title() outputs a title padded by =, in yellow.
+function echo_title() {
+	TITLE=$1
+	NCOLS=$(tput cols)
+	NEQUALS=$(((NCOLS-${#TITLE})/2-1))
+	tput setaf 3 # 3 = yellow
+	echo_equals "$NEQUALS"
+	printf " %s " "$TITLE"
+	echo_equals "$NEQUALS"
+	tput sgr 0 0  # reset terminal
 	echo
-	if [ "$archisoVersion" == "$archisoRequiredVersion" ]; then
-		tput setaf 2
-		echo "##################################################################"
-		echo "Archiso has the correct version. Continuing ..."
-		echo "##################################################################"
-		tput sgr0
-	else
-	tput setaf 1
-	echo "###################################################################################################"
-	echo "You need to install the correct version of Archiso"
-	echo "Use 'sudo downgrade archiso' to do that"
-	echo "or update your system"
-	echo "If a new archiso package comes in and you want to test if you can still build"
-	echo "the iso then change the version in line 37."
-	echo "###################################################################################################"
-	tput sgr0
-	fi
+}
 
-echo
-echo "################################################################## "
-tput setaf 2
-echo "Phase 2 :"
-echo "- Checking if archiso is installed"
-echo "- Saving current archiso version to archiso.md"
-echo "- Making mkarchiso verbose"
-tput sgr0
-echo "################################################################## "
-echo
+# echo_step_info() outputs additional step info in white, without a newline.
+function echo_step_info() {
+	tput setaf 7 # 7 = white
+	echo -n " ($1)"
+	tput sgr 0 0  # reset terminal
+}
 
-	package="archiso"
-
-	#----------------------------------------------------------------------------------
-
-	#checking if application is already installed or else install with aur helpers
-	if pacman -Qi $package &> /dev/null; then
-
-			echo "Archiso is already installed"
-
-	else
-
-		#checking which helper is installed
-		if pacman -Qi yay &> /dev/null; then
-
-			echo "################################################################"
-			echo "######### Installing with yay"
-			echo "################################################################"
-			yay -S --noconfirm $package
-
-		elif pacman -Qi trizen &> /dev/null; then
-
-			echo "################################################################"
-			echo "######### Installing with trizen"
-			echo "################################################################"
-			trizen -S --noconfirm --needed --noedit $package
-
-		fi
-
-		# Just checking if installation was successful
-		if pacman -Qi $package &> /dev/null; then
-
-			echo "################################################################"
-			echo "#########  $package has been installed"
-			echo "################################################################"
-
-		else
-
-			echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-			echo "!!!!!!!!!  $package has NOT been installed"
-			echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-			exit 1
-		fi
-
-	fi
-
+# echo_right() outputs a string at the rightmost side of the screen.
+function echo_right() {
+	TEXT=$1
 	echo
-	echo "Saving current archiso version to archiso.md"
-	sudo sed -i "s/\(^archiso-version=\).*/\1$archisoVersion/" archiso.md
+	tput cuu1
+	tput cuf "$(tput cols)"
+	tput cub ${#TEXT}
+	echo "$TEXT"
+}
+
+# echo_success() outputs [ OK ] in green, at the rightmost side of the screen.
+function echo_success() {
+	tput setaf 2 # 2 = green
+	echo_right "[ OK ]"
+	tput sgr 0 0  # reset terminal
+}
+
+# echo_failure() outputs [ FAILED ] in red, at the rightmost side of the screen.
+function echo_failure() {
+	tput setaf 1 # 1 = red
+	echo_right "[ FAILED ]"
+	tput sgr 0 0  # reset terminal
+}
+
+# exit_with_message() outputs and logs a message before exiting the script.
+function exit_with_message() {
 	echo
-	echo "Making mkarchiso verbose"
-	sudo sed -i 's/quiet="y"/quiet="n"/g' /usr/bin/mkarchiso
-
-echo
-echo "################################################################## "
-tput setaf 2
-echo "Phase 3 :"
-echo "- Deleting the build folder if one exists"
-echo "- Copying the Archiso folder to build folder"
-tput sgr0
-echo "################################################################## "
-echo
-
-	echo "Deleting the build folder if one exists - takes some time"
-	[ -d "$buildFolder" ] && sudo rm -rf "$buildFolder"
+	echo "$1"
 	echo
-	echo "Copying the Archiso folder to build work"
-	echo
-	mkdir "$buildFolder"
-	cp -r archiso "${buildFolder}/archiso"
+	exit 1
+}
 
-echo
-echo "################################################################## "
-tput setaf 2
-echo "Phase 4 :"
-echo "- Cleaning the cache from /var/cache/pacman/pkg/"
-tput sgr0
-echo "################################################################## "
+function find_and_replace() {
+	find ${buildFolder}/archiso/profiledef.sh -type f -exec sed -i "/$1/a $2" {} \;
+}
+
+function copy_dotfiles() {
+  if [[ ! -d "dotfiles" ]]; then
+    echo_step_info "Cloning dotfiles"
+    ./get_dotfiles.sh
+    echo_step_info "Sleeping for 20 seconds so you can copy the alias" && sleep 20s
+    echo_success
+  fi
+
+  echo_step_info "Copy dotfiles to the skel folder"
+  cp -rf dotfiles "${buildFolder}/archiso/airootfs/etc/skel"; echo_success
+
+	echo_step_info "Add dotfiles permissions to profiledef.sh"
+
+	FIND='livecd-sound'
+	find_and_replace $FIND '  ["/etc/skel/.ansible/playbooks/vault/run.sh"]="0:0:755"'
+	find_and_replace $FIND '  ["/etc/skel/.config/gnupg"]="0:0:700"'
+	find_and_replace $FIND '  ["/etc/skel/.config/gnupg/asc2gif.sh"]="0:0:755"'
+	find_and_replace $FIND '  ["/etc/skel/.config/openbox/autostart"]="0:0:755"'
+	find_and_replace $FIND '  ["/etc/skel/.config/VSCodium/User/extensions-list.sh"]="0:0:755"'
+
+	# path folders
+	etc_dir="${buildFolder}/archiso/airootfs/etc"
+	scripts=$( find "${etc_dir}/skel/.local/bin/" -type f | sed 's!.*/!!' )
+	for script in $scripts; do
+	find_and_replace $FIND "  [\"/etc/skel/.local/bin/${script}\"]=\"0:0:755\""
+	done
+
+	scripts=$( find "${etc_dir}/skel/.local/scripts/" -type f -name "*.sh" | sed 's!.*/!!' )
+	for script in $scripts; do
+	find_and_replace $FIND "  [\"/etc/skel/.local/scripts/${script}\"]=\"0:0:755\""
+	done
+
+	echo_success
+}
+
+###### => main #################################################################
+echo_title "Archon Linux ISO builder"; echo
+# change working directory to script directory
+cd "$(dirname "$0")" || exit 1
+
+###### => Step 1 ###############################################################
+echo_step "Step 1 -> Checking archiso version..."; echo
+
+if [[ $archisoVersion == "$archisoRequiredVersion" ]]; then
+  echo_step_info "Required archiso version: ${archisoRequiredVersion}"
+	echo_success
+else
+  echo_step_info "Required archiso version: ${archisoRequiredVersion}"
+	echo_failure
+  echo_step_info "Installed archiso version: ${archisoVersion}"; echo
+  exit_with_message "You need to install the correct version of Archiso, 'sudo downgrade archiso' or update the system."
+fi
+
+echo_step_info "Save archiso version to archiso.md"
+sudo sed -i "s/\(^archiso-version=\).*/\1${archisoRequiredVersion}/" archiso.md
+echo_success
+
+echo_step_info "Make mkarchiso verbose"
+sudo sed -i 's/quiet="y"/quiet="n"/g' /usr/bin/mkarchiso
+echo_success
 echo
 
-	if [[ $1 == "--clear" ]]; then
-		echo "Cleaning the cache from /var/cache/pacman/pkg/"
-		yes | sudo pacman -Scc
-	else
-		echo "Skipping"
-	fi
+###### => Step 2 ###############################################################
+echo_step "Step 2 -> Setup the build folder"; echo
+echo_step_info "Build folder : ${buildFolder}"; echo_success
+echo_step_info "Out folder : ${outFolder}"; echo_success
+echo_step_info "Delete any previous build folder"
+[[ -d $buildFolder ]] && sudo rm -rf "$buildFolder"
+echo_success
 
-echo
-echo "################################################################## "
-tput setaf 2
-echo "Phase 5 :"
-echo "- Building the iso - this can take a while - be patient"
-tput sgr0
-echo "################################################################## "
+echo_step_info "Copy the archiso folder to the build folder"
+mkdir "$buildFolder"
+cp -r archiso "${buildFolder}/archiso"; echo_success
 echo
 
-	[ -d "$outFolder" ] || mkdir "$outFolder"
-	cd "${buildFolder}/archiso/" || exit 1
-	sudo mkarchiso -v -w "$buildFolder" -o "$outFolder" "${buildFolder}/archiso/"
-
- 	echo "Moving pkglist.x86_64.txt"
- 	echo "########################"
-	rename=$(date +%Y-%m-%d)
- 	cp "${buildFolder}/iso/arch/pkglist.x86_64.txt"  "${outFolder}/archon-linux-${rename}-pkglist.txt"
-
+###### => Step 3 ###############################################################
+echo_step "Step 3 -> Setup the skel folder"; echo
+copy_dotfiles
 echo
-echo "##################################################################"
-tput setaf 2
-echo "DONE"
-echo "- Check your out folder : $outFolder"
-tput sgr0
-echo "################################################################## "
+
+if [[ $1 == "--clear" ]]; then
+  echo_step "Extra Step -> Clear packman cache"
+  yes | sudo pacman -Scc
+  echo_success
+  echo
+fi
+
+###### => Step 4 ###############################################################
+echo_step "Step 4 -> Building the ISO - be patient"; echo
+[[ -d $outFolder ]] || mkdir "$outFolder"
+cd "${buildFolder}/archiso/" || exit 1
+
+sudo mkarchiso -v -w "$buildFolder" -o "$outFolder" "${buildFolder}/archiso/"
+echo_step_info "ISO build"; echo_success
+
+echo_step_info "Copying pkglist"
+isolabel=archonlinux-$(date +%Y.%m.%d)-x86_64
+cp "${buildFolder}/iso/arch/pkglist.x86_64.txt"  "${outFolder}/${isolabel}-pkglist.txt"
+echo_success
+cd "$outFolder"
+isolabel="${isolabel}.iso"
+echo_step_info "Building sha1sum"; echo
+sha1sum "$isolabel" | tee "$isolabel".sha1
+echo_success
+echo_step_info "Building sha256sum"; echo
+sha256sum "$isolabel" | tee "$isolabel".sha256
+echo_success
+echo_step_info "Building md5sum"; echo
+md5sum "$isolabel" | tee "$isolabel".md5
+echo_success
 echo
+
+###### => Step 5 ###############################################################
+echo_step "Step 5 -> Cleanup"; echo
+sudo rm -rf "$buildFolder"
+echo_success
+echo
+
+echo_title "Check your out folder : ${outFolder}"; echo
+
+exit 0
