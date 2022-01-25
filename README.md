@@ -41,7 +41,9 @@ If it is your first run the build will run `get_dotfiles.sh` to setup the git ba
 
 `./build.sh --clear` will clear the pacman cache and download the latest packages. Build with this flag after any sort of update on your build system.
 
-If you plan to use Archon Linux as your daily driver, which you really should not so far, best would be to fork the [archon-dotfiles](https://github.com/archon-linux/archon-dotfiles) repository and edit `get_dotfiles.sh` to match your repository `git_url` at the top of the file. Delete the current `dotfiles` directory if you already built once and run `./build.sh` again. You may also want to use your local repository folder when developing, check the comments in `archiso/pacman.conf`
+If you plan to use Archon Linux as your daily driver, which you really should not so far, best would be to use the [archon-dotfiles](https://github.com/archon-linux/archon-dotfiles) repository as a template on github, not a fork, as you want to be able to make it private.
+
+Now edit `get_dotfiles.sh` to match your repository `git_url` at the top of the file. Delete the current `dotfiles` directory if you already built once and run `./build.sh` again. You may also want to use your local repository folder when developing, check the comments in `archiso/pacman.conf`
 
 More information in the #[dotfiles](#dotfiles) section.
 
@@ -325,6 +327,7 @@ rsync
 scrot
 shellcheck
 sxiv
+unclutter
 unrar
 unzip
 virtualfish
@@ -387,7 +390,6 @@ xdg-user-dirs-gtk
 Check [XDG_Base_Directory#Support](https://wiki.archlinux.org/title/XDG_Base_Directory#Support) for more information on what application has an XDG config path option.
 #### ***Libs & extras***
 ```
-aic94xx-firmware        => Missing driver.
 gnome-themes-extra
 gtk-engine-murrine      => Both are missing libs some gtk apps complained about.
 perl-file-desktopentry  => gives locale support to `obmenu-generator`.
@@ -395,9 +397,6 @@ python-pexpect          => dependency of `ansible`.
 python-pillow
 python-numpy            => both are dependencies for a script to generate png.
 qt5-x11extras           => dependency of `zbar` (qrcode script).
-r8168-dkms              => Missing drivers again.
-upd72020x-fw
-wd719x-firmware
 ```
 #### ***Openbox***
 ```
@@ -502,8 +501,6 @@ Thats where I jot down stuff that I plan to work on or bother me...
 `lxsession` comes with `xsettings-daemon` but I cant get it started as it asks for a config file and I cant find an exemple anywhere. Using `xsettingsd` for that job for now. I also need to figure out what `lxsettings` exactly does, and how it should or not be started by `lightdm` instead of it's default session thing? Me still confused haha...Or replace `lxsettings` by another polkit and dex to autostart .desktop files, not sure what I would be loosing from `lxsession` by doing that? Again, confused, rambling...
 
 Finish customizing calamares with nice icons and graphics, also a custom neofetch could be nice.
-
-Fuse both wallpaper set and rng scripts.
 
 ## 9. Update archiso<a name="update"></a>
 
