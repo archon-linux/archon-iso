@@ -507,24 +507,43 @@ Finish customizing calamares with nice icons and graphics, also a custom neofetc
 When archiso gets an update you might want to merge the changes. I have a `releng` branch just for that
 
 `git checkout releng`
+
 `cp -rf /usr/share/archiso/configs/releng/* /archiso/.`
+
 Check the changes with `git status` and `git diff /path/file`
+
 `git commit -m "Merge XX-X releng"`
+
 Create a temporary branch to rebase main from the `releng` branch
+
 `git checkout -b "releng-rebase"`
+
 Rebase `main` onto it
+
 `git rebase -i main`
+
 Resolve any issues
+
 Go back on `main` and merge the rebased `releng-rebase` branch
+
 `git checkout main`
+
 `git merge releng-rebase`
+
 Change the archiso version in `./build.sh`.
+
 `git commit -m "Update archiso version"`
+
 Push your updated branches
+
 `git push origin main`
+
 `git checkout releng`
+
 `git push origin releng`
+
 Back to work
+
 `git checkout main`
 
 ## Sources / Inspiration
