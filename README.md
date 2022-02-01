@@ -504,12 +504,28 @@ Finish customizing calamares with nice icons and graphics, also a custom neofetc
 
 ## 9. Update archiso<a name="update"></a>
 
-First commit will have the archiso folder be a copy of the archiso 60-1 releng folder. Compare this commit with the latest releng folder when updating archiso version.
+When archiso gets an update you might want to merge the changes. I have a `releng` branch just for that
 
-`git checkout 'git rev-list --max-parents=0 HEAD | tail -n 1'`
-`diff -rq ./archiso /usr/share/archiso/configs/releng`
-
-Change the archiso version in `archiso.md` and `./build.sh`.
+`git checkout releng`
+`cp -rf /usr/share/archiso/configs/releng/* /archiso/.`
+Check the changes with `git status` and `git diff /path/file`
+`git commit -m "Merge XX-X releng"`
+Create a temporary branch to rebase main from the `releng` branch
+`git checkout -b "releng-rebase"`
+Rebase `main` onto it
+`git rebase -i main`
+Resolve any issues
+Go back on `main` and merge the rebased `releng-rebase` branch
+`git checkout main`
+`git merge releng-rebase`
+Change the archiso version in `./build.sh`.
+`git commit -m "Update archiso version"`
+Push your updated branches
+`git push origin main`
+`git checkout releng`
+`git push origin releng`
+Back to work
+`git checkout main`
 
 ## Sources / Inspiration
 

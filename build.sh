@@ -8,7 +8,7 @@
 set -e
 
 ###### => variables ############################################################
-archisoRequiredVersion="archiso 60-1"
+archisoRequiredVersion="archiso 61-1"
 buildFolder="/tmp/archiso-tmp"
 outFolder="${HOME}/archon-iso-out"
 archisoVersion=$(sudo pacman -Q archiso)
